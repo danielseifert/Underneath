@@ -4,35 +4,9 @@ from knight import *
 from soldier import *
 from thief import *
 from wizard import *
-from describe import *
-
-title = '''
-  __    __ __    __ ____    _______ ______  __    __ _______       __   __________ __    __
-  ||    || |\    || | _ \   | ____| | ___ \ |\    || | ____|      /  \  |___  ___| ||    ||
-  ||    || | \   || || \ \  ||____  ||___|| | \   || ||____      / /\ \     ||     ||____||
-  ||    || ||\\  || ||  \ \ | ___|  | _  _/ ||\\  || | ___|     / /__\ \    ||     | ____ |
-  \\    // || \\ || ||  / / ||      || \\   || \\ || ||        / ______ \   ||     ||    ||
-   \\__//  ||  \\|| ||_/ /  ||_____ ||  \\  ||  \\|| ||_____  / /      \ \  ||     ||    ||
-    \__/   ||   \_| |___/   |_____| ||   \\ ||   \_| |_____| /_/        \_\ ||     ||    ||
-
-'''
-
-menuNumber = None
-
-hero = {"Health": None, "Light": None, "Name": None, "Guard": None, "Menu": None, "Dodge": None,
-    "Class": None, "Damage": None}
-
-enemy = {
-    "Health": None, "Dark": None, "Type": None, "Guard": None, "Menu": None, "Dodge": None,
-    "Damage": None
-}
-
-def slowPrint(string):
-    for i in string:
-        sys.stdout.write(i)
-        sys.stdout.flush()
-        time.sleep(.05)
-    time.sleep(1)
+from menumaster import *
+from genfunctions import *
+from encounter import *
 
 def menu(number):
     if number == 1:
@@ -44,21 +18,14 @@ def menu(number):
     elif number == 4:
         cloudMenu()
 
-def confirm():
-    print('Welcome. Press (x) to play. Press (z) to exit.')
-    userInput = input()
-    if userInput == 'z':
-        sys.exit()
-    elif userInput == 'x':
-        runGame()
-    else:
-        confirm()
-
 def storyBegin():
-    slowPrint("You've heard it's name...\n")
-    slowPrint("Underneath.\n")
-    slowPrint("What lies below our feet; below our cobbled streets, below our homes.\n")
-    slowPrint("Why else would you be here? You're not from around these parts, that's for sure.\n")
+    slowPrint("You've heard its name...\n")
+    slowPrint("The Nexus.\n")
+    slowPrint("""A place where the borders between realms and realities become frayed...
+    where the hand of chance has taken upon itself to weave these threads together in a new pattern,
+    tenuous though it be. A place where the greatest of beauties and the darkest of evils can be
+    found. A place where anything can kill you; where anything probably will.\n""")
+    slowPrint("Why else would you be here? If you've made it this far, you'd have to be.\n")
     slowPrint("Say, friend, just who are you, anyway?\n")
 
 def choices():
@@ -67,87 +34,36 @@ def choices():
     userName = input()
     hero["Name"] = userName
     slowPrint(str(hero["Name"]) + ", huh? Never heard of you. C'mon, there must be more.\n")
-
-def chooseClass():
-    global hero, menuNumber
-    slowPrint("What do you do for a living?\n")
-    print("Knight (x), Thief (z), Wizard (c), Soldier (v)\n")
-    userClass = input()
-    if userClass == "x":
-        knightDescribe()
-        print("Choose (x) || Back (z)")
-        userInput = input()
-        if userInput == 'x':
-            hero["Class"] = 'Knight'
-            hero["Health"] = 4000
-            hero["Damage"] = 200
-            menuNumber = 1
-        elif userInput == 'z':
-            chooseClass()
-        else:
-            chooseClass()
-    elif userClass == "z":
-        thiefDescribe()
-        print("Choose (x) || Back (z)")
-        userInput = input()
-        if userInput == 'x':
-            hero["Class"] = 'Thief'
-            hero["Health"] = 1500
-            hero["Damage"] = 75
-            menuNumber = 2
-        elif userInput == 'z':
-            chooseClass()
-        else:
-            chooseClass()
-    elif userClass == "c":
-        wizardDescribe()
-        print("Choose (x) || Back (z)")
-        userInput = input()
-        if userInput == 'x':
-            hero["Class"] = 'Wizard'
-            hero["Health"] = 2000
-            hero["Damage"] = 125
-            menuNumber = 3
-        elif userInput == 'z':
-            chooseClass()
-        else:
-            chooseClass()
-    elif userClass == "v":
-        cloudDescribe()
-        print("Choose (x) || Back (z)")
-        userInput = input()
-        if userInput == 'x':
-            hero["Class"] = 'Soldier'
-            hero["Health"] = 3500
-            hero["Damage"] = 175
-            menuNumber = 4
-        elif userInput == 'z':
-            chooseClass()
-        else:
-            chooseClass()
-    else:
-        chooseClass()
-    slowPrint("So, " + str(hero["Name"]) + ", you're a " + str(hero["Class"]) + " are you?\n")
-    slowPrint("How...unusual.\n")
-    slowPrint("Er, regardless, let me get the door for you...\n")
-    slowPrint("...stupid lock...\n")
-    slowPrint("...and there you are!\n")
-    slowPrint("I only hope you know what you've gotten yourself into.\n")
+    slowPrint('What do you do for a living?\n')
 
 def runGame():
     time.sleep(1)
     storyBegin()
 
-def story():
-    slowPrint("The door slams behind you.\n")
-    slowPrint("Ahead, a flaking stone staircase descends into darkness.\n")
-    slowPrint("A guttering torch casts a wavering amber light on the dusty walls.\n")
-    slowPrint("A host of blackened swords stands stabbed into the stone around you...\n")
-    slowPrint("...evidence of the myriads who have gone before.\n")
-    slowPrint("Gathering your courage, you descend.\n")
+def name():
+    slowPrint("So, " + str(hero["Name"]) + ", you're a " + str(hero["Class"]) + " are you?\n")
+    slowPrint("How...unusual.\n")
+    slowPrint("Er, regardless, let me get the door for you...\n")
+    slowPrint("Just so you know, I've got no idea how this thing works...\n")
+    slowPrint("According to our resident Mysticist, it shouldn't exist at all!\n")
+    slowPrint("Um...well, but it does. Let me shove the key in...\n")
+    slowPrint("...damnation, but that light's bright!...\n")
+    slowPrint("...and there you are!\n")
+    slowPrint("I only hope you know what you've gotten yourself into.\n")
 
-print(title)
+def story():
+    slowPrint("The high stone circle before you begins to rotate, vivid lines of iridescent light seeping from runes and lines cut into its surface.\n")
+    slowPrint("Wisps of energy crackle and swirl in its interior...\n")
+    slowPrint("The gatekeeper gestures forwards, and you step up, into the mouth of the unbearably bright void...\n")
+
 confirm()
+storyBegin()
 choices()
 chooseClass()
+name()
 story()
+sys.exit()
+#encounter("Slavering Orc")
+#encounter("Android Imperfect")
+#encounter("Looking Glass Elemental")
+#encounter("Psionic Dragon")
